@@ -1,0 +1,18 @@
+app_toggle_2fa:
+    path: /two-factor-toggle
+    controller: VivanWebSolution\Sylius2FAPlugin\Controller\TwoFactorToggleController::toggle2fa
+    methods: [POST,GET]
+
+admin_2fa_setup:
+    path: /admin/2fa/setup/{user_id}
+    controller: VivanWebSolution\Sylius2FAPlugin\Controller\TwoFactorToggleController::setup2fa
+    methods: [GET, POST]
+
+admin_2fa_verify_code:
+    path: two-factor/verify-code
+    controller: VivanWebSolution\Sylius2FAPlugin\Controller\TwoFactorToggleController::verifyCode
+    methods:  ['GET', 'POST']
+admin_2fa_reset:
+    path: /2fa/reset
+    controller: VivanWebSolution\Sylius2FAPlugin\Controller\TwoFactorToggleController::reset2FA
+    methods:  ['GET', 'POST']

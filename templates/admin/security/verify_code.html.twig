@@ -1,0 +1,223 @@
+{% block stylesheets %}
+<style>
+    body {
+        background-color: #f4f6f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 16px;
+    }
+
+    .container {
+        max-width: 480px;
+        width: 100%;
+        background: #fff;
+        padding: 40px 32px 48px;
+        border-radius: 14px;
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.12);
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    h1.twofa-header {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #1a73e8;
+        text-align: center;
+        margin-bottom: 0.25rem;
+    }
+
+    p.twofa-subtitle {
+         font-size: 1rem;
+        color: #6c757d;
+        text-align: center;
+        margin-bottom: 32px;
+    }
+
+    .step-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 28px;
+        text-align: center;
+        user-select: none;
+    }
+
+    .twofa-code-inputs {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin: 0 0 40px 0;
+        width: 100%;
+        max-width: 360px;
+    }
+
+    .twofa-code-inputs input {
+        flex: 1 1 52px;
+        max-width: 52px;
+        height: 64px;
+        font-size: 2rem;
+        font-weight: 600;
+        text-align: center;
+        border-radius: 12px;
+        border: 2px solid #d1d5db;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        -webkit-appearance: none;
+        -moz-appearance: textfield;
+        user-select: text;
+    }
+
+    .twofa-code-inputs input:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 8px #2563eb;
+        outline: none;
+        background-color: #f0f5ff;
+    }
+
+    /* Remove number input arrows in Firefox */
+    .twofa-code-inputs input::-moz-focus-inner {
+        border: 0;
+    }
+
+    .submit-section {
+        width: 100%;
+        max-width: 360px;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .submit-section button {
+        font-weight: 700;
+        border-radius: 8px;
+        padding: 0.85rem 2.5rem;
+        font-size: 1.15rem;
+        cursor: pointer;
+        border: none;
+        color: white;
+        background-color: #16a34a;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        width: 100%;
+        box-shadow: 0 6px 15px rgba(22, 163, 74, 0.5);
+        user-select: none;
+    }
+
+    .submit-section button:hover,
+    .submit-section button:focus {
+        background-color: #15803d;
+        box-shadow: 0 8px 20px rgba(21, 128, 61, 0.7);
+        outline: none;
+    }
+
+    .lost-device-btn {
+        display: inline-block;
+        width: 100%;
+        max-width: 360px;
+        text-align: center;
+        padding: 14px 0;
+        font-weight: 600;
+        font-size: 1rem;
+        color: white;
+        background: linear-gradient(90deg, #dc2626, #b91c1c);
+        border-radius: 8px;
+        text-decoration: none;
+        user-select: none;
+        box-shadow: 0 5px 12px rgba(220, 38, 38, 0.5);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+    }
+
+    .lost-device-btn:hover,
+    .lost-device-btn:focus {
+        background-color: #991b1b;
+        box-shadow: 0 7px 18px rgba(153, 27, 27, 0.7);
+        outline: none;
+        text-decoration: none;
+    }
+
+    @media (max-width: 400px) {
+        .twofa-code-inputs input {
+            max-width: 40px;
+            height: 50px;
+            font-size: 1.6rem;
+        }
+
+        .submit-section button,
+        .lost-device-btn {
+            font-size: 1rem;
+            padding: 0.75rem 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+<form method="POST" action="{{ path('admin_2fa_verify_code') }}" class="container" role="main" aria-label="Two Factor Authentication verification" novalidate>
+    <h1 class="twofa-header">Secure Your Account</h1>
+    <p class="twofa-subtitle">Enable 2FA in just a few simple steps.</p>
+
+    <div class="step-title">Step 3: Enter 6-Digit Code</div>
+
+    <div class="twofa-code-inputs" role="group" aria-label="Enter your 6-digit authentication code">
+        {% for i in 0..5 %}
+            <input 
+                type="text" 
+                maxlength="1" 
+                class="two-fa-digit" 
+                name="digit_{{ i }}" 
+                data-index="{{ i }}" 
+                inputmode="numeric" 
+                pattern="[0-9]*" 
+                required 
+                autocomplete="one-time-code" 
+                aria-label="Digit {{ i + 1 }}" />
+        {% endfor %}
+    </div>
+
+    <input type="hidden" name="code" id="code" />
+
+    <div class="submit-section">
+        <button type="submit">Verify</button>
+    </div>
+
+    <a href="{{ path('admin_2fa_setup', {'user_id': app.user.id}) }}" class="lost-device-btn" role="button" tabindex="0">
+        Lost your device? Setup 2FA again
+    </a>
+
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const digits = document.querySelectorAll('.two-fa-digit');
+    const hiddenInput = document.getElementById('code');
+
+    if (!digits.length || !hiddenInput) return;
+
+    function updateHidden() {
+        hiddenInput.value = Array.from(digits).map(input => input.value).join('');
+    }
+
+    digits.forEach((input, idx) => {
+        input.addEventListener('input', () => {
+            input.value = input.value.replace(/[^0-9]/g, '').slice(0, 1);
+            if (input.value && idx < digits.length - 1) {
+                digits[idx + 1].focus();
+            }
+            updateHidden();
+        });
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !input.value && idx > 0) {
+                digits[idx - 1].focus();
+            }
+        });
+    });
+
+    digits[0].focus();
+});
+</script>

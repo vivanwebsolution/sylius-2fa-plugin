@@ -1,0 +1,4 @@
+suites:
+    main:
+        namespace: VivanWebSolution\Sylius2FAPlugin
+        psr4_prefix: VivanWebSolution\Sylius2FAPlugin

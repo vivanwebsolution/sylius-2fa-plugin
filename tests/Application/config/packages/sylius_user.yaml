@@ -1,0 +1,6 @@
+sylius_user:
+    resources:
+        admin:
+            user:
+                classes:
+                    model: Tests\Application\Entity\User\AdminUser

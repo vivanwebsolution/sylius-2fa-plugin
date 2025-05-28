@@ -1,0 +1,9 @@
+acme_sylius_example_shop:
+    resource: "@VivanWebSolutionSylius2FAPlugin/config/shop_routing.yaml"
+    prefix: /{_locale}
+    requirements:
+        _locale: ^[a-z]{2}(?:_[A-Z]{2})?$
+
+acme_sylius_example_admin:
+    resource: "@VivanWebSolutionSylius2FAPlugin/config/admin_routing.yaml"
+    prefix: /admin

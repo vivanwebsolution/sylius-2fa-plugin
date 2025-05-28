@@ -1,0 +1,229 @@
+{% block stylesheets %}
+<style>
+    body {
+        background-color: #f4f6f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .twofa-wrapper {
+        max-width: 480px;
+        width: 100%;
+        background: #fff;
+        padding: 40px 32px;
+        border-radius: 14px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        box-sizing: border-box;
+    }
+
+    .twofa-header {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #1a73e8;
+        text-align: center;
+        margin-bottom: 0.25rem;
+    }
+
+    .twofa-subtitle {
+        font-size: 1rem;
+        color: #6c757d;
+        text-align: center;
+        margin-bottom: 32px;
+    }
+
+    .step-container {
+        display: none;
+        animation: fadeIn 0.4s ease-in-out forwards;
+    }
+
+    .step-container.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .step-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 28px;
+        text-align: center;
+    }
+
+    .ui.center.aligned img.ui.image {
+        max-width: 140px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        border: 1px solid #d1d5db;
+        margin: 0 auto;
+        display: block;
+    }
+
+    .platform-buttons {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 40px;
+    }
+
+    .platform-buttons a {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background-color: #f4f6f9;
+        color: #4b5563 !important;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 1rem;
+        padding: 0.8rem 0;
+        text-decoration: none;
+        border: 1.5px solid #d1d5db;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .platform-buttons a:hover {
+        background-color: #e2e8f0;
+        color: #2563eb !important;
+        border-color: #2563eb;
+        text-decoration: none;
+    }
+
+    .platform-buttons i.icon {
+        font-size: 1.3rem;
+    }
+
+    .step-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 28px;
+        gap: 16px;
+    }
+
+    .step-buttons button {
+        flex: 1;
+        font-weight: 600;
+        border-radius: 6px;
+        padding: 0.75rem 0;
+        font-size: 1rem;
+        cursor: pointer;
+        border: none;
+        color: white;
+        background-color: #16a34a;
+        transition: background-color 0.3s ease;
+    }
+
+    .step-buttons button:hover {
+        background-color: #15803d;
+    }
+
+    #prevBtn {
+        background-color: #6b7280;
+    }
+
+    #prevBtn:hover {
+        background-color: #4b5563;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="twofa-wrapper">
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="ui {{ type == 'error' ? 'negative' : (type == 'success' ? 'positive' : 'info') }} message">
+                <i class="close icon"></i>
+                <div class="header">{{ message|trans }}</div>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <h1 class="twofa-header">Secure Your Account</h1>
+    <p class="twofa-subtitle">Enable 2FA in just a few simple steps.</p>
+
+    <form method="post" class="ui form" id="multiStepForm" novalidate>
+        <!-- Step 1 -->
+        <div class="step-container active" id="step-1">
+            <div class="step-title">Step 1: Install Google Authenticator</div>
+            <div class="platform-buttons">
+                <a href="https://apps.apple.com/app/google-authenticator/id388497605" target="_blank">
+                    <i class="apple icon"></i> iPhone
+                </a>
+                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">
+                    <i class="android icon"></i> Android
+                </a>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-container" id="step-2">
+            <div class="step-title">Step 2: Scan the QR Code</div>
+            <div class="ui center aligned">
+                <img src="{{ qrImage }}" alt="2FA QR Code" class="ui centered medium image" />
+                <p style="margin-top: 10px; color: #6c757d; text-align: center">Open the app and scan this QR code.</p>
+            </div>
+        </div>
+
+        <div class="step-buttons">
+            <button type="button" class="ui button" id="prevBtn" style="display:none;">Previous</button>
+            <button type="submit" class="ui button" id="nextBtn">Finish</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+(function () {
+    let currentStep = 1;
+    const totalSteps = 2;
+
+    const showStep = (step) => {
+        for (let i = 1; i <= totalSteps; i++) {
+            document.getElementById(`step-${i}`).classList.remove('active');
+        }
+        document.getElementById(`step-${step}`).classList.add('active');
+
+        document.getElementById('prevBtn').style.display = step === 1 ? 'none' : 'inline-block';
+
+        // Step 2 button text: "Next" instead of "Finish"
+        document.getElementById('nextBtn').textContent = 'Next';
+    };
+
+    document.getElementById('nextBtn').addEventListener('click', (e) => {
+        if (currentStep < totalSteps) {
+            e.preventDefault(); // prevent form submission
+            currentStep++;
+            showStep(currentStep);
+        } else {
+            // When currentStep == totalSteps (step 2), redirect to admin_2fa_verify_code
+            e.preventDefault();
+            window.location.href = "{{ path('admin_2fa_verify_code') }}";
+        }
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        if (currentStep > 1) {
+            currentStep--;
+            showStep(currentStep);
+        }
+    });
+
+    showStep(currentStep);
+})();
+
+</script>
+{% endblock %}

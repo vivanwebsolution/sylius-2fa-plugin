@@ -1,0 +1,10 @@
+scheb_two_factor:
+    security_tokens:
+        - Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
+
+    google:
+        enabled: true
+        server_name: 'Sylius Admin'
+        issuer: 'Sylius'
+
+    ip_whitelist: []  # Optional

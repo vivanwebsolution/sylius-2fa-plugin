@@ -1,0 +1,7 @@
+sylius:
+    ui:
+        two_factor_authentication_setup: "Two-Factor Authentication Setup"
+        scan_qr_code_instruction: "Scan this QR code with your Google Authenticator app:"
+        cannot_scan_enter_secret: "If you cannot scan the QR code, enter this secret manually in your app:"
+        authenticator_code_usage_info: "Once scanned, your app will generate 6-digit codes. Use these codes when logging in."
+        back_to_dashboard: "Back to Dashboard"
