@@ -77,7 +77,7 @@ class TwoFactorToggleController extends AbstractController
      *    - If valid code, enable 2FA in DB.
      *    - If user already enabled 2FA, redirect to dashboard.
      */
-    public function setup2fa(Request $request, Security $security): Response
+    public function setup2fa(Request $request): Response
     {
         $userId = $request->get('user_id');
         if (!$userId) {
@@ -118,10 +118,10 @@ class TwoFactorToggleController extends AbstractController
             'secret' => $user->getGoogleAuthenticatorSecret(),
         ]);
     }
-    public function verifyCode(Request $request, Security $security): Response
+    public function verifyCode(Request $request): Response
     {
         /** @var AdminUserInterface|null $user */
-        $user = $security->getUser();
+        $user = $this->getUser();
 
         if (!$user) {
             throw $this->createAccessDeniedException('You must be logged in.');

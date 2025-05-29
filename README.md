@@ -21,6 +21,20 @@ This plugin adds Google Two-Factor Authentication (2FA) support to Sylius 2.0 Ad
 - Composer
 
 ---
+## Configuration
+Make sure your Symfony app has the following configuration file:
+
+```bash
+# config/packages/scheb_2fa.yaml
+
+scheb_two_factor:
+    security_tokens:
+        - Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
+        - Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken
+    google:
+        enabled: true
+```
+
 # VivanWebSolution Sylius 2FA Plugin
 
 You can install the plugin using Composer:
@@ -44,7 +58,9 @@ php bin/console doctrine:schema:update --force
 Run this command to install the necessary packages:
 
 ```bash
-composer require scheb/2fa-bundle scheb/2fa-google-authenticator spomky-labs/otphp endroid/qr-code:^4.0
+composer require scheb/2fa-bundle scheb/2fa-google-authenticator spomky-labs/otphp
+
+composer require endroid/qr-code:^6.0 -W
 ```
 ### Step 2:  Register the Scheb Two Factor Bundle
 
@@ -89,12 +105,22 @@ Add the following 2FA toggle section inside the form:
 ```bash
 {% include '@VivanWebSolutionSylius2FAPlugin/admin/sections.html.twig' %}
 ```
-### Step 5:  Configure SchebTwoFactorBundle
+### Step 5:  Add this file 
+
+```bash
+# /var/www/html/mobio/AcmeStore/config/routes.yaml
+
+vivan_sylius_2fa_plugin_admin:
+    resource: '@VivanWebSolutionSylius2FAPlugin/config/admin_routing.yaml'
+    prefix: /admin
+```
+### Step 6:  Configure SchebTwoFactorBundle
 
 Create or update your config file:
 
 ```bash
 # config/packages/scheb_two_factor.yaml
+
 scheb_two_factor:
     security_tokens:
         - Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken

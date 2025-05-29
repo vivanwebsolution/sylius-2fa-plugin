@@ -39,6 +39,31 @@
         margin-bottom: 32px;
     }
 
+    .flash-message {
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 1.25rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-align: center;
+        width: 100%;
+        max-width: 360px;
+        border-left: 4px solid;
+    }
+
+    .alert-success {
+        background-color: #d1fae5;
+        color: #065f46;
+        border-color: #10b981;
+    }
+
+    .alert-error,
+    .alert-danger {
+        background-color: #fee2e2;
+        color: #991b1b;
+        border-color: #dc2626;
+    }
+
     .step-title {
         font-size: 1.3rem;
         font-weight: 600;
@@ -78,11 +103,6 @@
         box-shadow: 0 0 8px #2563eb;
         outline: none;
         background-color: #f0f5ff;
-    }
-
-    /* Remove number input arrows in Firefox */
-    .twofa-code-inputs input::-moz-focus-inner {
-        border: 0;
     }
 
     .submit-section {
@@ -161,6 +181,15 @@
     <h1 class="twofa-header">Secure Your Account</h1>
     <p class="twofa-subtitle">Enable 2FA in just a few simple steps.</p>
 
+    {# Flash messages inside the container #}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }} flash-message" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
     <div class="step-title">Step 3: Enter 6-Digit Code</div>
 
     <div class="twofa-code-inputs" role="group" aria-label="Enter your 6-digit authentication code">
@@ -188,7 +217,6 @@
     <a href="{{ path('admin_2fa_setup', {'user_id': app.user.id}) }}" class="lost-device-btn" role="button" tabindex="0">
         Lost your device? Setup 2FA again
     </a>
-
 </form>
 
 <script>
