@@ -1,4 +1,5 @@
 {
+    "name": "vivanwebsolution/sylius-2fa-plugin",
     "type": "sylius-plugin",
     "keywords": [
         "sylius",
@@ -54,6 +55,9 @@
         }
     },
     "extra": {
+        "sylius": {
+            "version": "1.0.0"
+        },
         "symfony": {
             "require": "^6.4"
         }
