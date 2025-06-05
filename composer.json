@@ -14,6 +14,7 @@
         "spomky-labs/otphp": "^11.3",
         "sylius/sylius": "~2.0.0"
     },
+    "readme": "README.md",  
     "require-dev": {
         "behat/behat": "^3.16",
         "dmore/behat-chrome-extension": "^1.4",
