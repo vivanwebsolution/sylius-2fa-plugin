@@ -1,6 +1,8 @@
 {
     "name": "vivanwebsolution/sylius-2fa-plugin",
+    "description": "VivanWebSolution Sylius 2FA Plugin",
     "type": "sylius-plugin",
+    "homepage": "https://github.com/vivanwebsolution/sylius-2fa-plugin",
     "keywords": [
         "sylius",
         "sylius-plugin"
